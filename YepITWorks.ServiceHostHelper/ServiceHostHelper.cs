@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Security;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
@@ -21,25 +20,17 @@ namespace YepITWorks.ServiceHostHelper
 		protected List<IEndpointBehavior> _endPointBehaviors;
 		protected List<IServiceBehavior> _serviceBehaviors;
 
-		public ServiceHostHelper(Binding binding, String address)
-		{
-			_binding = binding;
-			_address = address;
-
-			if (_binding == null)
-				throw new ArgumentNullException("An explicit binding cannot be null.");
-
-			if (String.IsNullOrEmpty(_address))
-				throw new ArgumentNullException("An explicit address cannot be null or empty.");
-
-			ValidateServiceContract();
-		}
+        public ServiceHostHelper() : this(GetDefaultBinding()) {}
+        public ServiceHostHelper(Binding binding) : this(binding, "net.tcp://localhost:9000/") {}
+        public ServiceHostHelper(Binding binding, String address) : this(binding, address, null, null) {}
+        public ServiceHostHelper(Binding binding, String address, List<IEndpointBehavior> endpointBehaviors) : this(binding, address, endpointBehaviors, null) {}
+        public ServiceHostHelper(Binding binding, String address, List<IServiceBehavior> serviceBehaviors) : this(binding, address, null, serviceBehaviors) {}
 
 		public ServiceHostHelper(
 			Binding binding, 
 			String address, 
-			List<IEndpointBehavior> endpointBehaviors = null, 
-			List<IServiceBehavior> serviceBehaviors = null)
+			List<IEndpointBehavior> endpointBehaviors, 
+			List<IServiceBehavior> serviceBehaviors)
 		{
 			_binding = binding;
 			_address = address;
@@ -53,14 +44,6 @@ namespace YepITWorks.ServiceHostHelper
 				throw new ArgumentNullException("An explicit address cannot be null or empty.");
 
 			ValidateServiceContract();
-		}
-
-		public ServiceHostHelper(Binding binding) : this(binding, "net.tcp://localhost:9000/")
-		{
-		}
-
-		public ServiceHostHelper() : this(GetDefaultBinding())
-		{
 		}
 
 		public ServiceHost CreateNewServiceHost()
@@ -244,25 +227,6 @@ namespace YepITWorks.ServiceHostHelper
 		{
 			TearDownChannelFactory();
 			TearDownWcfService();
-		}
-	}
-
-	public class ConstructorNotFoundException : Exception
-	{
-		public ConstructorNotFoundException()
-		{
-		}
-
-		public ConstructorNotFoundException(string message) : base(message)
-		{
-		}
-
-		public ConstructorNotFoundException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
-
-		protected ConstructorNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
 		}
 	}
 }

@@ -55,8 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServiceHostHelperSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceHostHelperTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Services\HelloWorld.cs" />
     <Compile Include="Services\HelloWorldService.cs" />
     <Compile Include="Services\IHelloWorldService.cs" />
